@@ -1,0 +1,510 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Приглашение 💌</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      text-align: center;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 400px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #yes {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    #no {
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+   <div id="page1">
+
+<h1>💌 Вам пришла открытка</h1>
+<p>Открыть?</p>
+
+<button id="open">Открыть открытку</button>
+
+</div>
+
+<div id="page2" style="display:none;">
+
+<h1>Пойдёшь со мной на свидание? 💖</h1>
+<p>Приглашение, лично для тебя 😊</p>
+
+<div id="buttons">
+    <button id="yes">Да 💕</button>
+    <button id="no">Нет 😢</button>
+</div>
+
+</div>
+
+    <p id="result"></p>
+  </div>
+
+  <script>
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    document.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    const yesBtn = document.getElementById("yes");
+    const noBtn = document.getElementById("no");
+    const result = document.getElementById("result");
+
+    function createYesButton() {
+      const newYes = document.createElement("button");
+
+      newYes.textContent = "Да 💕";
+      newYes.style.background = "#ff4d6d";
+      newYes.style.color = "white";
+      newYes.style.padding = "10px 20px";
+      newYes.style.margin = "10px";
+      newYes.style.border = "none";
+      newYes.style.borderRadius = "10px";
+      newYes.style.fontSize = "16px";
+      newYes.style.cursor = "pointer";
+
+      // копируем поведение оригинальной кнопки "Да"
+      newYes.onclick = yesBtn.onclick;
+
+      document.getElementById("buttons").appendChild(newYes);
+    }
+
+    const messages = [
+      "Что ты хочешь сделать? 😊",
+      "Кнопка «Да» такая красивая и розовая 💕",
+      "Да оставь ты кнопку «Нет» в покое 😅",
+      "Зачем ты вообще на неё наводишься? 🤨",
+      "А если случайно попадёшь? 😨",
+      "Остановись, пока не поздно! 😱",
+      "Хватит! Я серьёзно! 😤",
+      "Ещё немного и я сделаю что-то плохое 😈",
+      "Последнее предупреждение! ⚠️",
+      "Ладно... уничтожаю кнопку «Нет» 💥"
+    ];
+
+    let hoverCount = 0;
+    let noButtonDisabled = false;
+
+    yesBtn.onclick = () => {
+      const rect = noBtn.getBoundingClientRect();
+
+      for (let i = 0; i < 40; i++) {
+        const particle = document.createElement("div");
+
+        particle.style.position = "fixed";
+        particle.style.left = rect.left + rect.width / 2 + "px";
+        particle.style.top = rect.top + rect.height / 2 + "px";
+        particle.style.width = "12px";
+        particle.style.height = "12px";
+        particle.style.borderRadius = "50%";
+        particle.style.background =
+          `hsl(${Math.random() * 360}, 100%, 60%)`;
+        particle.style.pointerEvents = "none";
+        particle.style.zIndex = "9999";
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 100 + Math.random() * 200;
+
+        particle.animate(
+          [
+            {
+              transform: "translate(0,0) scale(1)",
+              opacity: 1
+            },
+            {
+              transform: `translate(
+                ${Math.cos(angle) * distance}px,
+                ${Math.sin(angle) * distance}px
+              ) scale(0)`,
+              opacity: 0
+            }
+          ],
+          {
+            duration: 5000,
+            easing: "cubic-bezier(.17,.67,.83,.67)"
+          }
+        );
+
+        setTimeout(() => particle.remove(), 3000);
+      }
+
+      noBtn.style.display = "none";
+
+      setTimeout(() => {
+
+        document.querySelector(".card").innerHTML = `
+
+        <h1>✨ Отлично!</h1>
+        <p>Куда отправимся? 😊</p>
+
+        <div id="places">
+
+        <button class="place" data-text="Не думаю что это подходящее место 😄">
+        🏊 Бассейн
+        </button>
+
+        <button class="place" data-text="Хм, можем сходить, но в другой раз ☕">
+        ☕ Кафе
+        </button>
+
+        <button class="place" data-text="Обязательно сходим, но позже 😉 ">
+        ⛰️ Горы
+        </button>
+
+        <button class="place" data-text="Ой ой, мы ведь там уже были 🎡">
+        🎡 Аттракционы
+        </button>
+
+        <button class="place" data-text="Неплохая идея, но не сегодня 🎬">
+        🎬 Кино
+        </button>
+
+        <button class="place zoo">
+        🐼 Зоопарк
+        </button>
+
+        </div>
+
+        <p id="choice"></p>
+
+        `;
+
+        startPlacesPage();
+
+        },1500);
+
+    };
+
+    noBtn.onclick = () => {
+      const rect = noBtn.getBoundingClientRect();
+
+      for (let i = 0; i < 40; i++) {
+        const particle = document.createElement("div");
+
+        particle.style.position = "fixed";
+        particle.style.left = rect.left + rect.width / 2 + "px";
+        particle.style.top = rect.top + rect.height / 2 + "px";
+        particle.style.width = "12px";
+        particle.style.height = "12px";
+        particle.style.borderRadius = "50%";
+        particle.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        particle.style.pointerEvents = "none";
+        particle.style.zIndex = "9999";
+
+        document.body.appendChild(particle);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 100 + Math.random() * 200;
+
+        particle.animate(
+          [
+            { transform: "translate(0,0) scale(1)", opacity: 1 },
+            {
+              transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`,
+              opacity: 0
+            }
+          ],
+          { duration: 2000, easing: "ease-out" }
+        );
+
+        setTimeout(() => particle.remove(), 2000);
+      }
+
+      noBtn.remove();
+      result.textContent = "Остаётся только правильный выбор 😏";
+      noBtn.remove();
+    };
+
+    noBtn.onmouseover = () => {
+      if (hoverCount < messages.length) {
+        result.textContent = messages[hoverCount];
+        hoverCount++;
+      }
+
+      if (hoverCount >= messages.length && !noButtonDisabled) {
+        noButtonDisabled = true;
+
+        const rect = noBtn.getBoundingClientRect();
+
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement("div");
+
+          particle.style.position = "fixed";
+          particle.style.left = rect.left + rect.width / 2 + "px";
+          particle.style.top = rect.top + rect.height / 2 + "px";
+          particle.style.width = "12px";
+          particle.style.height = "12px";
+          particle.style.borderRadius = "50%";
+          particle.style.background = `hsl(${Math.random() * 360},100%,60%)`;
+          particle.style.pointerEvents = "none";
+          particle.style.zIndex = "9999";
+
+          document.body.appendChild(particle);
+
+          const angle = Math.random() * Math.PI * 2;
+          const distance = 100 + Math.random() * 200;
+
+          particle.animate(
+            [
+              { transform: "translate(0,0) scale(1)", opacity: 1 },
+              {
+                transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`,
+                opacity: 0
+              }
+            ],
+            { duration: 2000, easing: "ease-out" }
+          );
+
+          setTimeout(() => particle.remove(), 2000);
+        }
+
+        noBtn.remove();
+        result.textContent = "Остаётся только правильный выбор 😏";
+        noBtn.remove();
+      }
+
+      if (!noButtonDisabled) {
+        const rect = noBtn.getBoundingClientRect();
+
+        const btnX = rect.left + rect.width / 2;
+        const btnY = rect.top + rect.height / 2;
+
+        let dx = btnX - mouseX;
+        let dy = btnY - mouseY;
+
+        const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+
+        dx /= distance;
+        dy /= distance;
+
+        const minDist = 100;
+        const extra = Math.random() * 100;
+
+        noBtn.style.transform =
+          `translate(${dx * (minDist + extra)}px, ${dy * (minDist + extra)}px)`;
+      }
+
+    };
+
+    const openBtn = document.getElementById("open");
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
+
+    openBtn.onclick = () => {
+        page1.style.display = "none";
+        page2.style.display = "block";
+    };
+
+    function startPlacesPage(){
+
+    const buttons =
+    document.querySelectorAll(".place");
+
+    const text =
+    document.getElementById("choice");
+
+    buttons.forEach(btn=>{
+
+    btn.onclick=()=>{
+
+    // Зоопарк -> следующая страница
+    if(btn.classList.contains("zoo")){
+
+    document.querySelector(".card").innerHTML=`
+
+    <h1>🐼 Урааа!</h1>
+
+    <p>
+    Я так и знал что ты выберешь именно это 😍
+    </p>
+
+    <button id="nextZoo">
+    Дальше ❤️
+    </button>
+
+    `;
+
+    document.getElementById("nextZoo")
+    .onclick=()=>{
+
+    document.querySelector(".card").innerHTML=`
+
+    <h1>📋 Справка перед путешествием</h1>
+
+    <p style="text-align:left">
+
+    👕 Надеть: лёгкую удобную одежду<br><br>
+
+    🧢 Желательно взять что-нибудь на голову 
+    (кепку или панаму)<br><br>
+
+    💧 Взять с собой попить<br><br>
+
+    📱 Не забыть телефон для фото 📸<br><br>
+
+    😊 И самое главное — хорошее настроение
+
+    </p>
+
+    <button id="finish">
+    Отправляемся 🚶✨
+    </button>
+
+    `;
+
+    document.getElementById("finish")
+    .onclick=()=>{
+
+    document.querySelector(".card").innerHTML=`
+
+    <h1>🐼 В путь!</h1>
+
+    <p>
+    Приключение начинается ❤️
+    </p>
+
+    `;
+
+    };
+
+    };
+
+    return;
+    }
+
+
+    // Текст для остальных кнопок
+    text.textContent=
+    btn.dataset.text;
+
+
+    // Партиклы
+    const rect =
+    btn.getBoundingClientRect();
+
+    for(let i=0;i<20;i++){
+
+    const particle=
+    document.createElement("div");
+
+    particle.style.position="fixed";
+    particle.style.left=
+    rect.left+rect.width/2+"px";
+
+    particle.style.top=
+    rect.top+rect.height/2+"px";
+
+    particle.style.width="10px";
+    particle.style.height="10px";
+
+    particle.style.borderRadius="50%";
+
+    particle.style.background=
+    `hsl(${Math.random()*360},100%,60%)`;
+
+    particle.style.pointerEvents="none";
+
+    document.body.appendChild(
+    particle
+    );
+
+    const angle=
+    Math.random()*Math.PI*2;
+
+    const distance=
+    50+Math.random()*100;
+
+    particle.animate([
+
+    {
+    transform:"translate(0,0)",
+    opacity:1
+    },
+
+    {
+    transform:
+    `translate(
+    ${Math.cos(angle)*distance}px,
+    ${Math.sin(angle)*distance}px
+    )`,
+
+    opacity:0
+    }
+
+    ],{
+
+    duration:1500
+
+    });
+
+    setTimeout(()=>
+    particle.remove(),
+    1500
+    );
+
+    }
+
+    // удаляем кнопку
+    btn.remove();
+
+    };
+
+    });
+
+    }
+
+  </script>
+
+</body>
+</html> 
