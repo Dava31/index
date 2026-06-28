@@ -22,6 +22,7 @@
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       max-width: 400px;
+      animation: showCard 0.8s ease;
     }
 
     h1 {
@@ -41,6 +42,20 @@
       font-size: 16px;
       cursor: pointer;
       transition: 0.3s;
+
+      @keyframes showCard{
+
+      from{
+      opacity:0;
+      transform:scale(0.7);
+      }
+
+      to{
+      opacity:1;
+      transform:scale(1);
+      }
+
+      }
     }
 
     #buttons {
@@ -176,17 +191,15 @@
           }
         );
 
-        setTimeout(() => particle.remove(), 3000);
+        setTimeout(() => particle.remove(), 5000);
       }
 
       noBtn.style.display = "none";
 
-      setTimeout(() => {
-
         document.querySelector(".card").innerHTML = `
 
         <h1>✨ Отлично!</h1>
-        <p>Куда отправимся? 😊</p>
+        <p>Куда ты хотела бы отправиться? 😊</p>
 
         <div id="places">
 
@@ -221,8 +234,6 @@
         `;
 
         startPlacesPage();
-
-        },1500);
 
     };
 
@@ -263,7 +274,6 @@
 
       noBtn.remove();
       result.textContent = "Остаётся только правильный выбор 😏";
-      noBtn.remove();
     };
 
     noBtn.onmouseover = () => {
@@ -408,11 +418,22 @@
 
     document.querySelector(".card").innerHTML=`
 
-    <h1>🐼 В путь!</h1>
+    <h1>💖 Всё готово</h1>
 
     <p>
-    Приключение начинается ❤️
+    Теперь отказаться уже нельзя 😈
+    <br><br>
+    Маршрут построен ❤️
+    <br><br>
+    Следующая остановка:
+    🐼 Зоопарчэк
     </p>
+
+    <button onclick="
+    window.location.reload()
+    ">
+    Открыть заново
+    </button>
 
     `;
 
@@ -503,6 +524,35 @@
     });
 
     }
+
+  setInterval(()=>{
+
+  const heart=document.createElement("div");
+
+  heart.innerHTML="💖";
+
+  heart.style.position="fixed";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.top="-50px";
+  heart.style.fontSize="30px";
+  heart.style.pointerEvents="none";
+
+  document.body.appendChild(heart);
+
+  heart.animate([
+
+  {transform:"translateY(0px)",opacity:1},
+  {transform:"translateY(110vh)",opacity:0}
+
+  ],{
+
+  duration:5000
+
+  });
+
+  setTimeout(()=>heart.remove(),5000);
+
+  },500);
 
   </script>
 
